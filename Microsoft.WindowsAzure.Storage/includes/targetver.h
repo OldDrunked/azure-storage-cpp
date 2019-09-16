@@ -1,27 +1,74 @@
-// -----------------------------------------------------------------------------------------
-// <copyright file="targetver.h" company="Microsoft">
-//    Copyright 2013 Microsoft Corporation
-//
-//    Licensed under the Apache License, Version 2.0 (the "License");
-//    you may not use this file except in compliance with the License.
-//    You may obtain a copy of the License at
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-//    Unless required by applicable law or agreed to in writing, software
-//    distributed under the License is distributed on an "AS IS" BASIS,
-//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//    See the License for the specific language governing permissions and
-//    limitations under the License.
-// </copyright>
-// -----------------------------------------------------------------------------------------
+#include <iostream>
+using namespace std;
+struct Node
+{
+	int x;
+	Node *l, *r;
+};
+void Show(Node *&Tree)
+{
+	if (Tree != NULL)
+	{
+		Show(Tree->l);
+		cout << endl << Tree->x;
+		Show(Tree->r);
+	}
+}
+void add(int x, Node *&Tree)
+{
+	if (NULL == Tree)
+	{
+		Tree = new Node;
+		Tree->x = x;
+		cout << endl << x;
+		Tree->l = Tree->r = NULL;
 
-#pragma once
+	}
+	if (x < Tree->x)
+	{
+		if (Tree->l != NULL) add(x, Tree->l);
+		else                                          
+		{
+			Tree->l = new Node;                      
+			Tree->l->l = Tree->l->r = NULL;        
+			Tree->l->x = x; 
+			cout << endl << x << "          ";
+		}
+	}
+	if (x > Tree->x)
+	{
+		if (Tree->r != NULL) add(x, Tree->r); 
+		else                                          
+		{
+			Tree->r = new Node;                      
+			Tree->r->l= Tree->r->r = NULL;        
+			Tree->r->x = x;  
+			cout << endl << "         "  << x;
+		}
+	}
+}
+void del(Node *&Tree)
+{
+	if (Tree != NULL)
+	{
+		del(Tree->l);
+		del(Tree->r);
+		delete Tree;
+	}
+}
+int main()
+{
+	Node *Tree = NULL;
+	int A[18] = { 15,17,24,31,83,23,57,99,77,66,0,37,94,23,74,1,85,2};
 
-// Including SDKDDKVer.h defines the highest available Windows platform.
+	for (int i = 0; i <= 18; i++)
+	{
+		add(A[i], Tree);
 
-// If you wish to build your application for a previous Windows platform, include WinSDKVer.h and
-// set the _WIN32_WINNT macro to the platform you wish to support before including SDKDDKVer.h.
+	}
+	
+	del(Tree);
 
-#ifdef _WIN32
-#include <SDKDDKVer.h>
-#endif
+	system("pause");
+	return 0;
+}
